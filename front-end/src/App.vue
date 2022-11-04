@@ -6,10 +6,10 @@ import MNavbar from '@/components/molecules/M-Navbar.vue'
 <template>
   <MNavbar></MNavbar>
 
-  <RouterView class="app p-5" />
+  <RouterView class="app py-5 px-3" />
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 body {
   overflow-x: hidden;
 }
@@ -17,6 +17,6 @@ body {
   min-height: 100vh;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url(/background.svg);
+  background-image: url(../public/img/bg.svg);
 }
 </style>

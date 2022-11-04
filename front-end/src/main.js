@@ -2,7 +2,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import ScreenSizeDetector from 'screen-size-detector';
-import FloatingVue from 'floating-vue'
+import FloatingVue from 'floating-vue';
+import { LineChart } from '@opd/g2plot-vue';
 
 const screenSize = new ScreenSizeDetector();
 import Flicking from "@egjs/vue3-flicking";
@@ -15,7 +16,7 @@ import '@/assets/main.scss';
 
 const app = createApp(App);
 
-app.use(router).use(FloatingVue);
+app.use(router).use(FloatingVue).use(LineChart);
 
 app.component("FlickingEx", Flicking);
 
