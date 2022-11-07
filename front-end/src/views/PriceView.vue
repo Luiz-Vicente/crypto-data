@@ -1,6 +1,33 @@
 <template>
   <section class="pt-5">
-    <div class="my-4 d-flex justify-content-end">
+    <div class="my-4 d-flex justify-content-between" :class="{ 'flex-column': screenSize.is.mobile }">
+      <div :class="{ 'w-25': !screenSize.is.mobile }">
+        <label class="text-white lh-sm m-0 p-0" for="searchCrypto"
+          >Search the price by a specific date</label
+        >
+        <div class="d-flex align-items-center">
+          <input
+            id="searchCrypto"
+            v-model="searchedDate"
+            v-on:keyup.enter="searchCoin()"
+            v-on:input="getSpecifiedPrice()"
+            class="form-control my-3 me-1 bg-white rounded"
+            placeholder="Crypto name..."
+            type="date"
+          />
+          <div
+            v-if="coinSpecifiedPrice"
+            class="border border-2 border-purple rounded px-2 py-1"
+          >
+            <p v-if="!loadingSpecifiedPrice" class="text-white text-nowrap lh-lg m-0">
+              {{ coinSpecifiedPrice }}
+            </p>
+            <div v-if="loadingSpecifiedPrice" class="spinner-border spinner-border-sm text-purple" role="status">
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div :class="{ 'w-25': !screenSize.is.mobile }">
         <label class="text-white lh-sm m-0 p-0" for="searchCrypto"
           >Search for Cryptocurrencies</label
@@ -13,7 +40,9 @@
             class="form-control my-3 me-1 bg-white rounded"
             placeholder="Crypto name..."
           />
-          <button v-on:click="searchCoin()" class="btn btn-outline-gray-300">Search</button>
+          <button v-on:click="searchCoin()" class="btn btn-purple">
+            Search
+          </button>
         </div>
       </div>
     </div>
@@ -49,28 +78,16 @@
             screenSize.is.mobile ? 'justify-content-between' : 'flex-column'
           "
         >
-          <button
-            class="btn btn-sm btn-outline-gray-200 mb-2"
-            @click="period = 30"
-          >
+          <button class="btn btn-sm btn-purple mb-2" @click="period = 30">
             30
           </button>
-          <button
-            class="btn btn-sm btn-outline-gray-200 mb-2"
-            @click="period = 60"
-          >
+          <button class="btn btn-sm btn-purple mb-2" @click="period = 60">
             60
           </button>
-          <button
-            class="btn btn-sm btn-outline-gray-200 mb-2"
-            @click="period = 90"
-          >
+          <button class="btn btn-sm btn-purple mb-2" @click="period = 90">
             90
           </button>
-          <button
-            class="btn btn-sm btn-outline-gray-200 mb-2"
-            @click="period = 364"
-          >
+          <button class="btn btn-sm btn-purple mb-2" @click="period = 364">
             365
           </button>
         </div>
@@ -89,6 +106,9 @@ export default {
   },
   data() {
     return {
+      loadingSpecifiedPrice: false,
+      coinSpecifiedPrice: null,
+      searchedDate: null,
       researchedCoin: "bitcoin",
       interval: null,
       description: null,
@@ -117,6 +137,27 @@ export default {
     },
   },
   methods: {
+    dateFormat(value) {
+      return moment(value).format("DD-MM-YYYY");
+    },
+    async getSpecifiedPrice() {
+      this.loadingSpecifiedPrice = true;
+      try {
+        const { data } = await axios.get(
+          `https://api.coingecko.com/api/v3/coins/${
+            this.researchedCoin
+          }/history?date=${this.dateFormat(this.searchedDate)}&localization=en`
+        );
+        this.coinSpecifiedPrice =
+          data.market_data.current_price.usd.toLocaleString("en", {
+            style: "currency",
+            currency: "USD",
+          });
+        this.loadingSpecifiedPrice = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getCoinInfo() {
       try {
         const { data } = await axios.get(
@@ -124,13 +165,13 @@ export default {
             this.researchedCoin || "bitcoin"
           }&order=market_cap_desc&per_page=100&page=1&sparkline=false`
         );
-        this.coinPrice = data[0].current_price.toLocaleString("pt-BR", {
+        this.coinPrice = data[0].current_price.toLocaleString("en", {
           style: "currency",
           currency: "USD",
         });
         this.coin = data[0];
       } catch (error) {
-        console.log(error.data.response);
+        console.log(error);
       }
     },
     async getCoinHistory() {
