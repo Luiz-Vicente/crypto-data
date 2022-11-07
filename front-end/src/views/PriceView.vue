@@ -1,6 +1,15 @@
 <template>
   <section class="pt-5">
-    <div class="my-4 d-flex justify-content-between" :class="{ 'flex-column': screenSize.is.mobile }">
+    <h3 :class="{ 'mt-5': screenSize.is.mobile }" class="mt-4 text-white">
+      Top Most Searched Coins Today:
+    </h3>
+    <MFlicking
+      @selected="(researchedCoin = $event.item.name), searchCoin()"
+    ></MFlicking>
+    <div
+      class="my-4 d-flex justify-content-between"
+      :class="{ 'flex-column': screenSize.is.mobile }"
+    >
       <div :class="{ 'w-25': !screenSize.is.mobile }">
         <label class="text-white lh-sm m-0 p-0" for="searchCrypto"
           >Search the price by a specific date</label
@@ -19,11 +28,17 @@
             v-if="coinSpecifiedPrice"
             class="border border-2 border-purple rounded px-2 py-1"
           >
-            <p v-if="!loadingSpecifiedPrice" class="text-white text-nowrap lh-lg m-0">
+            <p
+              v-if="!loadingSpecifiedPrice"
+              class="text-white text-nowrap lh-lg m-0"
+            >
               {{ coinSpecifiedPrice }}
             </p>
-            <div v-if="loadingSpecifiedPrice" class="spinner-border spinner-border-sm text-purple" role="status">
-            </div>
+            <div
+              v-if="loadingSpecifiedPrice"
+              class="spinner-border spinner-border-sm text-purple"
+              role="status"
+            ></div>
           </div>
         </div>
       </div>
@@ -100,10 +115,12 @@
 import axios from "@/services/axios.js";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import moment from "moment";
+import MFlicking from "@/components/molecules/MFlicking.vue";
 
 export default {
   components: {
     PulseLoader,
+    MFlicking,
   },
   data() {
     return {
@@ -145,9 +162,11 @@ export default {
       this.loadingSpecifiedPrice = true;
       try {
         const { data } = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/${
-            this.researchedCoin.toLowerCase().trim()
-          }/history?date=${this.dateFormat(this.searchedDate)}&localization=en`
+          `https://api.coingecko.com/api/v3/coins/${this.researchedCoin
+            .toLowerCase()
+            .trim()}/history?date=${this.dateFormat(
+            this.searchedDate
+          )}&localization=en`
         );
         this.coinSpecifiedPrice =
           data.market_data.current_price.usd.toLocaleString("en", {
@@ -206,6 +225,7 @@ export default {
     searchCoin() {
       this.getCoinInfo();
       this.getCoinHistory();
+      this.updateInfo();
     },
   },
   created() {

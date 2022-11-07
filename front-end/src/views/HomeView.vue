@@ -41,85 +41,29 @@
         />
       </div>
     </main>
-    <h3 v-if="trendingCoins.length" :class="{ 'mt-5': screenSize.is.mobile }" class="text-white">
+    <h3 :class="{ 'mt-5': screenSize.is.mobile }" class="mt-4 text-white">
       Top Most Searched Coins Today:
     </h3>
-    <FlickingEx
-      v-if="trendingCoins.length"
-      class="p-2 rounded"
-      :options="{ circular: true }"
-      :plugins="plugins"
-    >
-      <div
-        v-for="(coin, index) in trendingCoins"
-        class="flicking-panel"
-        :key="index"
-      >
-        <div
-          class="glassmorphism d-flex align-items-center justify-content-center bg-gray mx-1 rounded border border-2 border-gray-500 p-3"
-          :style=" screenSize.is.mobile ? 'width: 80vw': 'width: 20vw'"
-        >
-          <img
-            style="width: 30px; height: 30px;"
-            class="rounded-circle me-2"
-            :src="coin.item.small || '/img/404.svg'"
-            alt=""
-          />
-          <p
-            class="m-0 text-white lh-sm fs-2"
-          >
-            {{ coin.item.name }}
-          </p>
-        </div>
-      </div>
-    </FlickingEx>
+    <MFlicking></MFlicking>
   </div>
 </template>
 
 <script>
-import { AutoPlay } from "@egjs/flicking-plugins";
-import axios from "@/services/axios.js";
+import MFlicking from '@/components/molecules/MFlicking.vue'
 
 export default {
-  data() {
-    return {
-      trendingCoins: [],
-      plugins: [new AutoPlay()],
-    };
-  },
-  watch: {
-    period() {
-      this.getBitcoinHistory();
-    },
+  components: {
+    MFlicking
   },
   computed: {
     screenSize() {
       return this.$screenSize;
     },
   },
-  methods: {
-    async getTrendingCoins() {
-      try {
-        const { data } = await axios.get(
-          "https://api.coingecko.com/api/v3/search/trending"
-        );
-        this.trendingCoins = data.coins;
-      } catch (error) {
-        console.log(error.data.response);
-      }
-    },
-  },
-  mounted() {
-    this.getTrendingCoins();
-  },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.glassmorphism {
-  backdrop-filter: blur(5px);
-  background-color: rgba(255, 255, 255, 0.15);
-}
 .coin-1 {
   transform: translate(70px, 140px);
   width: 20%;
