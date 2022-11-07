@@ -146,7 +146,7 @@ export default {
       try {
         const { data } = await axios.get(
           `https://api.coingecko.com/api/v3/coins/${
-            this.researchedCoin
+            this.researchedCoin.toLowerCase().trim()
           }/history?date=${this.dateFormat(this.searchedDate)}&localization=en`
         );
         this.coinSpecifiedPrice =
@@ -163,7 +163,7 @@ export default {
       try {
         const { data } = await axios.get(
           `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${
-            this.researchedCoin || "bitcoin"
+            this.researchedCoin.toLowerCase().trim() || "bitcoin"
           }&order=market_cap_desc&per_page=100&page=1&sparkline=false`
         );
         this.coinPrice = data[0].current_price.toLocaleString("en", {
@@ -182,7 +182,7 @@ export default {
         let day = 1;
         const { data } = await axios.get(
           `https://api.coingecko.com/api/v3/coins/${
-            this.researchedCoin || "bitcoin"
+            this.researchedCoin.toLowerCase().trim() || "bitcoin"
           }/market_chart?vs_currency=usd&days=${this.period}&interval=daily`
         );
         data.prices.forEach((price) => {
