@@ -55,19 +55,17 @@
         :key="index"
       >
         <div
-          class="glassmorphism d-flex aling-items-center justify-content-center bg-gray mx-1 rounded border border-2 border-gray-500 p-3"
-          style="width: 20vw"
+          class="glassmorphism d-flex align-items-center justify-content-center bg-gray mx-1 rounded border border-2 border-gray-500 p-3"
+          :style=" screenSize.is.mobile ? 'width: 80vw': 'width: 20vw'"
         >
           <img
-            style="width: 30px"
-            class="rounded-circle"
-            :class="{ 'me-2': !screenSize.is.mobile }"
+            style="width: 30px; height: 30px;"
+            class="rounded-circle me-2"
             :src="coin.item.small || '/img/404.svg'"
             alt=""
           />
           <p
-            :class="{ 'd-none': screenSize.is.mobile }"
-            class="m-0 text-white lh-lg fs-1"
+            class="m-0 text-white lh-sm fs-2"
           >
             {{ coin.item.name }}
           </p>

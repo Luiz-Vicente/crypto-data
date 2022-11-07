@@ -1,14 +1,11 @@
 <template>
-  <nav class="ps-3 navbar navbar-expand-lg navbar-light glassmorphism">
-    <div class="container-fluid">
-      <img style="width: 35px" class="me-3" src="/img/favicon.svg" alt="" />
-      <RouterLink class="navbar-brand text-white" aria-current="page" to="/"
-        >Crypto Data</RouterLink
-      >
-      <RouterLink class="nav-link text-white" aria-current="page" to="/price"
-        >Prices</RouterLink
-      >
-    </div>
+  <nav class="ps-3 py-2 d-flex align-items-center glassmorphism">
+    <RouterLink class="text-white" aria-current="page" to="/"
+      ><img style="width: 35px" class="me-3" src="/img/favicon.svg" alt=""
+    /></RouterLink>
+    <RouterLink class="text-white" aria-current="page" to="/price"
+      >Prices</RouterLink
+    >
   </nav>
 </template>
 

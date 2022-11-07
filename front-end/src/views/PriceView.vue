@@ -1,13 +1,33 @@
 <template>
-  <section>
-    <h2 class="text-white mt-5 d-flex align-items-center">
+  <section class="pt-5">
+    <div class="my-4 d-flex justify-content-end">
+      <div :class="{ 'w-25': !screenSize.is.mobile }">
+        <label class="text-white lh-sm m-0 p-0" for="searchCrypto"
+          >Search for Cryptocurrencies</label
+        >
+        <div class="d-flex align-items-center">
+          <input
+            id="searchCrypto"
+            v-model="researchedCoin"
+            v-on:keyup.enter="searchCoin()"
+            class="form-control my-3 me-1 bg-white rounded"
+            placeholder="Crypto name..."
+          />
+          <button v-on:click="searchCoin()" class="btn btn-outline-gray-300">Search</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center">
       <img
-        style="width: 40px"
+        style="width: 40px; height: 40px"
         class="rounded-circle me-2"
         :src="coin.image || '/img/404.svg'"
       />
-      {{ coin.name }} price now: {{ coinPrice }}
-    </h2>
+      <h2 class="text-white">
+        {{ coin.name }} price now: <span>{{ coinPrice }}</span>
+      </h2>
+    </div>
 
     <div class="d-flex p-2" :class="{ 'flex-column': screenSize.is.mobile }">
       <div
@@ -20,10 +40,7 @@
         class="d-flex flex-column"
         :class="{ 'ms-2': !screenSize.is.mobile }"
       >
-        <p
-          v-tooltip="'Period in days'"
-          class="d-block text-white fs-3 fw-semibold"
-        >
+        <p v-tooltip="'Period in days'" class="d-block text-white fs-3">
           Period(days)
         </p>
         <div
@@ -72,6 +89,8 @@ export default {
   },
   data() {
     return {
+      researchedCoin: "bitcoin",
+      interval: null,
       description: null,
       showChart: false,
       period: 30,
@@ -101,7 +120,9 @@ export default {
     async getCoinInfo() {
       try {
         const { data } = await axios.get(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${
+            this.researchedCoin || "bitcoin"
+          }&order=market_cap_desc&per_page=100&page=1&sparkline=false`
         );
         this.coinPrice = data[0].current_price.toLocaleString("pt-BR", {
           style: "currency",
@@ -118,7 +139,9 @@ export default {
         this.config.data = [];
         let day = 1;
         const { data } = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${this.period}&interval=daily`
+          `https://api.coingecko.com/api/v3/coins/${
+            this.researchedCoin || "bitcoin"
+          }/market_chart?vs_currency=usd&days=${this.period}&interval=daily`
         );
         data.prices.forEach((price) => {
           this.config.data.push({
@@ -132,10 +155,24 @@ export default {
         console.log(error.data.response);
       }
     },
+    updateInfo() {
+      this.interval = setInterval(() => {
+        this.getCoinInfo();
+        console.log("chamando");
+      }, 40000);
+    },
+    searchCoin() {
+      this.getCoinInfo();
+      this.getCoinHistory();
+    },
   },
   created() {
     this.getCoinInfo();
     this.getCoinHistory();
+    this.updateInfo();
+  },
+  beforeUnmount() {
+    clearInterval(this.interval);
   },
 };
 </script>
