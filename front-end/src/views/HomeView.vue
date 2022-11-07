@@ -41,10 +41,11 @@
         />
       </div>
     </main>
-    <h3 :class="{ 'mt-5': screenSize.is.mobile }" class="text-white">
+    <h3 v-if="trendingCoins.length" :class="{ 'mt-5': screenSize.is.mobile }" class="text-white">
       Top Most Searched Coins Today:
     </h3>
     <FlickingEx
+      v-if="trendingCoins.length"
       class="p-2 rounded"
       :options="{ circular: true }"
       :plugins="plugins"
@@ -108,7 +109,7 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
     this.getTrendingCoins();
   },
 };

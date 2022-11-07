@@ -99,6 +99,7 @@
 <script>
 import axios from "@/services/axios.js";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import moment from "moment";
 
 export default {
   components: {
