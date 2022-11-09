@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import MNavbar from '@/components/molecules/M-Navbar.vue'
+import MNavbar from '@/components/molecules/MNavbar.vue'
 </script>
 
 <template>

@@ -3,9 +3,9 @@
     <h3 :class="{ 'mt-5': screenSize.is.mobile }" class="mt-4 text-white">
       Top Most Searched Coins Today:
     </h3>
-    <MFlicking
-      @selected="(researchedCoin = $event.item.name), searchCoin()"
-    ></MFlicking>
+    <Flicking
+      @selected="(researchedCoin = $event.item.id), searchCoin()"
+    ></Flicking>
     <div
       class="my-4 d-flex justify-content-between"
       :class="{ 'flex-column': screenSize.is.mobile }"
@@ -45,7 +45,7 @@
 
       <div :class="{ 'w-25': !screenSize.is.mobile }">
         <label class="text-white lh-sm m-0 p-0" for="searchCrypto"
-          >Search for Cryptocurrencies</label
+          >Search for Cryptocurrencies (id)</label
         >
         <div class="d-flex align-items-center">
           <input
@@ -115,12 +115,12 @@
 import axios from "@/services/axios.js";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import moment from "moment";
-import MFlicking from "@/components/molecules/MFlicking.vue";
+import Flicking from "@/components/molecules/MFlicking.vue";
 
 export default {
   components: {
     PulseLoader,
-    MFlicking,
+    Flicking,
   },
   data() {
     return {
